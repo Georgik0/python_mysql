@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+
+  db:
+    restart: always
+    image: mariadb
+    container_name: myapp_db
+    environment:
+      - MYSQL_USER=db_user
+      - MYSQL_PASSWORD=db_user_pass
+      - MYSQL_DATABASE=app_db
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 3306:3306
+    volumes:
+      - dbdata:/var/lib/mysql
+
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8081:80
+
+#  bot:
+#    container_name: my_bot
+#    build: ./server
+#    volumes:
+#      - .:/src
+#    command: python test_bd.py
+#    network_mode: "host"
+
+volumes:
+  dbdata:
